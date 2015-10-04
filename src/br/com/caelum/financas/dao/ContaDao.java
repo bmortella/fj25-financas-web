@@ -28,8 +28,8 @@ public class ContaDao {
 	}
 
 	public void remove(Conta conta) {
-		Conta contaParaRemover = this.manager.find(Conta.class, conta.getId());
-		this.manager.remove(contaParaRemover);
+		Conta aRemover = this.manager.find(Conta.class, conta.getId());
+		this.manager.remove(aRemover);
 	}
 	public void altera(Conta conta){
 		this.manager.merge(conta);

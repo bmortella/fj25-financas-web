@@ -27,9 +27,9 @@ public class MovimentacoesBean implements Serializable {
 	
 	@Inject
 	private ContaDao contaDao;
+	
 	@Inject
 	private MovimentacaoDao movimentacaoDao;
-	
 	
 	public void grava() {
 		Conta contaRelacionada = contaDao.busca(contaId);
@@ -38,7 +38,6 @@ public class MovimentacoesBean implements Serializable {
 		limpaFormularioDoJSF();
 	}
 	
-
 	public void remove() {
 		movimentacaoDao.remove(this.movimentacao);
 		this.movimentacoes = movimentacaoDao.lista();
