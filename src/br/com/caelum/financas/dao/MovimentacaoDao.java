@@ -6,12 +6,14 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import br.com.caelum.financas.exception.ValorInvalidoException;
 import br.com.caelum.financas.modelo.Conta;
 import br.com.caelum.financas.modelo.Movimentacao;
 import br.com.caelum.financas.modelo.TipoMovimentacao;
+import br.com.caelum.financas.modelo.ValorPorMesEAno;
 
 @Stateless
 public class MovimentacaoDao {
@@ -22,7 +24,7 @@ public class MovimentacaoDao {
 	public void adiciona(Movimentacao movimentacao) {
 		this.manager.persist(movimentacao);
 		if(movimentacao.getValor().compareTo(BigDecimal.ZERO) < 0){
-			throw new ValorInvalidoException("MovimentaÃ§Ã£o negativa");
+			throw new ValorInvalidoException("Movimentação negativa");
 		}
 	}
 
@@ -42,7 +44,7 @@ public class MovimentacaoDao {
 	@SuppressWarnings("unchecked")
 	public List<Movimentacao> listaTodasmovimentacoes(Conta conta){
 		return this.manager.createQuery("select m from Movimentacao m where m.conta = :conta order by m.valor desc")
-		.setParameter("conta", conta)
+		.setParameter(":conta", conta)
 		.getResultList();
 	}
 	
@@ -53,6 +55,7 @@ public class MovimentacaoDao {
 		.setParameter("tipo", tipo)
 		.getResultList();
 	}
+	
 	public BigDecimal calculaTotalMovimentado(Conta conta, TipoMovimentacao tipo){
 		String jpql = "select sum(m.valor) from Movimentacao m where m.conta = :conta and m.tipoMovimentacao = :tipo";
 		TypedQuery<BigDecimal> query = this.manager.createQuery(jpql, BigDecimal.class);
@@ -60,10 +63,21 @@ public class MovimentacaoDao {
 		query.setParameter("tipo", tipo);
 		return query.getSingleResult();
 	}
+	
 	public List<Movimentacao> buscaTodasMovimentacoesdaConta(String titular){
 		String jpql = "select m from Movimentacao m where m.conta.titular like :titular";
 		TypedQuery<Movimentacao> query = this.manager.createQuery(jpql, Movimentacao.class);
 		query.setParameter("titular", "%"+titular+"%");
 		return query.getResultList();
+	}
+	
+	public List<ValorPorMesEAno> listaMesesComMovimentacoes(Conta conta, TipoMovimentacao tipoMovimentacao){
+		String jpql = "select new br.com.caelum.financas.modelo.ValorPorMesEAno(month(m.data), year(m.data), sum(m.valor)) "
+				+ "from Movimentacao m where m.conta = :conta and m.tipoMovimentacao = :tipo group by year(m.data)||month(m.data) "
+				+ "order by sum(m.valor) desc";
+	    Query query = this.manager.createQuery(jpql);
+	    query.setParameter("conta", conta);
+	    query.setParameter("tipo", tipoMovimentacao);
+	    return query.getResultList();
 	}
 }
