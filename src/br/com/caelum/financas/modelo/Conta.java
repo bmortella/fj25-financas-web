@@ -73,6 +73,4 @@ public class Conta implements Serializable {
 	public void setMovimentacoes(List<Movimentacao> movimentacoes) {
 		this.movimentacoes = movimentacoes;
 	}
-
-	
 }
