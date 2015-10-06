@@ -44,7 +44,7 @@ public class MovimentacaoDao {
 	@SuppressWarnings("unchecked")
 	public List<Movimentacao> listaTodasmovimentacoes(Conta conta){
 		return this.manager.createQuery("select m from Movimentacao m where m.conta = :conta order by m.valor desc")
-		.setParameter(":conta", conta)
+		.setParameter("conta", conta)
 		.getResultList();
 	}
 	
