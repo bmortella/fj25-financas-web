@@ -4,13 +4,12 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import br.com.caelum.financas.exception.ValorInvalidoException;
-import br.com.caelum.financas.modelo.Categoria;
 import br.com.caelum.financas.modelo.Conta;
 import br.com.caelum.financas.modelo.Movimentacao;
 import br.com.caelum.financas.modelo.TipoMovimentacao;
@@ -19,10 +18,11 @@ import br.com.caelum.financas.modelo.ValorPorMesEAno;
 @Stateless
 public class MovimentacaoDao {
 
-	@PersistenceContext
-	EntityManager manager;
+	@Inject
+	private EntityManager manager;
 
 	public void adiciona(Movimentacao movimentacao) {
+		this.manager.joinTransaction();
 		this.manager.persist(movimentacao);
 		if(movimentacao.getValor().compareTo(BigDecimal.ZERO) < 0){
 			throw new ValorInvalidoException("Movimentação negativa");
@@ -38,6 +38,7 @@ public class MovimentacaoDao {
 	}
 
 	public void remove(Movimentacao movimentacao) {
+		this.manager.joinTransaction();
 		Movimentacao movimentacaoParaRemover = this.manager.find(Movimentacao.class, movimentacao.getId());
 		this.manager.remove(movimentacaoParaRemover);
 	}
