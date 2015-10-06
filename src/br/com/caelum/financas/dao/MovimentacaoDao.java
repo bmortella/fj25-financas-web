@@ -10,6 +10,7 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import br.com.caelum.financas.exception.ValorInvalidoException;
+import br.com.caelum.financas.modelo.Categoria;
 import br.com.caelum.financas.modelo.Conta;
 import br.com.caelum.financas.modelo.Movimentacao;
 import br.com.caelum.financas.modelo.TipoMovimentacao;
@@ -79,5 +80,11 @@ public class MovimentacaoDao {
 	    query.setParameter("conta", conta);
 	    query.setParameter("tipo", tipoMovimentacao);
 	    return query.getResultList();
+	}
+	
+	public List<Movimentacao> listaComCategorias(){
+		String jpql = "select distinct m from Movimentacao m left join fetch m.categorias";
+		Query query = this.manager.createQuery(jpql);
+		return query.getResultList();
 	}
 }
