@@ -1,6 +1,7 @@
 package br.com.caelum.financas.dao;
 
 import java.math.BigDecimal;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -8,6 +9,11 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 import br.com.caelum.financas.exception.ValorInvalidoException;
 import br.com.caelum.financas.modelo.Conta;
@@ -87,5 +93,25 @@ public class MovimentacaoDao {
 		String jpql = "select distinct m from Movimentacao m left join fetch m.categorias";
 		Query query = this.manager.createQuery(jpql);
 		return query.getResultList();
+	}
+	
+	public List<Movimentacao> pesquisa(Conta conta, TipoMovimentacao tipoMovimentacao, Integer mes){
+		CriteriaBuilder builder = manager.getCriteriaBuilder();
+		CriteriaQuery<Movimentacao> criteria = builder.createQuery(Movimentacao.class);
+		Root<Movimentacao> root = criteria.from(Movimentacao.class);
+		
+		Predicate conjunction = builder.conjunction();
+		if(conta.getId() != null){
+			conjunction = builder.and(conjunction, builder.equal(root.<Conta>get("conta"), conta));
+		}
+		if(mes != null && mes != 0){
+			Expression<Integer> expression = builder.function("month", Integer.class, root.<Calendar> get("data"));
+		    conjunction = builder.and(conjunction, builder.equal(expression, mes));
+		}
+		if(tipoMovimentacao != null){
+			conjunction = builder.and(conjunction, builder.equal(root.<TipoMovimentacao>get("tipoMovimentacao"), tipoMovimentacao));
+		}
+        criteria.where(conjunction);
+        return manager.createQuery(criteria).getResultList();
 	}
 }
