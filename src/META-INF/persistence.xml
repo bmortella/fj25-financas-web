@@ -11,6 +11,9 @@
 		<class>br.com.caelum.financas.modelo.Conta</class>
 		<class>br.com.caelum.financas.modelo.Movimentacao</class>
 		<class>br.com.caelum.financas.modelo.Categoria</class>
+		
+		<!-- Cache de segundo nivel, ENABLE_SELECTIVE = Habilita cache para entidades marcadas com @Cacheable -->
+		<shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode>
 
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect" />
@@ -20,6 +23,9 @@
 			
 			<!-- poderia ser: update, create, create-drop, none -->
 			<property name="hibernate.hbm2ddl.auto" value="update" />
+			
+			<!-- Cache de segundo nível -->
+			<property name="hibernate.cache.use_second_level_cache" value="true"/>
 		</properties>
 	</persistence-unit>
 
