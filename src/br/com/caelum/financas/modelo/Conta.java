@@ -13,6 +13,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -28,11 +31,16 @@ public class Conta implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
+	@NotNull
+	@Pattern(regexp="[A-Z].*")
 	private String titular;
+	
 	private String agencia;
 	private String numero;
 	
+	@NotNull
 	@Column(length=20, nullable=false)
+	@Size(min=3, max=20)
 	private String banco;
 
 	@Cache(usage=CacheConcurrencyStrategy.TRANSACTIONAL)
