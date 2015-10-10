@@ -69,6 +69,7 @@ public class MovimentacaoDao {
 		TypedQuery<BigDecimal> query = this.manager.createQuery(jpql, BigDecimal.class);
 		query.setParameter("conta", conta);
 		query.setParameter("tipo", tipo);
+		query.setHint("org.hibernate.cacheable", "true");
 		return query.getSingleResult();
 	}
 	
