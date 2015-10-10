@@ -28,6 +28,9 @@
 			<property name="hibernate.cache.use_second_level_cache" value="true"/>
 			<!-- Cache de queries -->
 			<property name="hibernate.cache.use_query_cache" value="true"/>
+			
+			<!-- Habilita geração de estatísticas -->
+			<property name="hibernate.generate_statistics" value="true"/>
 		</properties>
 	</persistence-unit>
 
