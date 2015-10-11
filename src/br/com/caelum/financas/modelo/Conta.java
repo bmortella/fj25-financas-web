@@ -20,9 +20,12 @@ import javax.validation.constraints.Size;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
+import br.com.caelum.financas.validator.NumeroEAgencia;
+
 @Entity
 @Cacheable
 @Table(uniqueConstraints={@UniqueConstraint(columnNames={"agencia", "numero"})})
+@NumeroEAgencia
 public class Conta implements Serializable {
 
 	private static final long serialVersionUID = 1L;
