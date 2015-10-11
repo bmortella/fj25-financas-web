@@ -9,7 +9,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
@@ -52,6 +54,10 @@ public class Conta implements Serializable {
 	
 	@Version
 	private Integer versao;
+	
+	@OneToOne
+	@JoinColumn(unique=true)
+	private Gerente gerente;
 	
 	public Integer getId() {
 		return id;
